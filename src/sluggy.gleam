@@ -30,7 +30,7 @@ type SlugAcc {
 /// `String` instead of a whole `Slug`.
 ///
 /// This is more convenient when you don't need the word count or
-/// precomputed length; use `from_string` instead if you do.
+/// precomputed length; use [from_string](#from_string) instead if you do.
 ///
 /// ### Example
 /// ```gleam
@@ -101,7 +101,7 @@ pub fn inspect(slug: Slug) -> String {
 /// Creates a new `Slug` from the provided string.
 ///
 /// If you only need the slugified string and don't want the **words**
-/// and **length** fields, use `str_slugify` instead.
+/// and **length** fields, use [str_slugify](#str_slugify) instead.
 ///
 /// ### Example
 /// ```gleam

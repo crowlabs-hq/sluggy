@@ -4,8 +4,8 @@ pub fn is_combining_mark(code: Int) -> Bool {
   { 0x0300 <= code && code <= 0x036F }
 }
 
-/// Computes the arithmetical operation to get the lowercase
-/// if the provided code corresponds to an ASCII letter
+/// If the given codepoint corresponds to an uppercase ASCII letter (`A`-`Z`),
+/// it returns the lowercase ASCII codepoint of the equivalent letter.
 pub fn to_lower_ascii(code: Int) -> Int {
   case code {
     c if { 0x41 <= c && c <= 0x5A } -> c + 0x20
@@ -13,8 +13,7 @@ pub fn to_lower_ascii(code: Int) -> Int {
   }
 }
 
-/// Returns wether the given code corresponds to
-/// an ASCII alphanumeric character
+/// Returns whether the given code is a lowercase **alphanumeric** ASCII character.
 pub fn is_slug_char(code: Int) -> Bool {
   case code {
     c if { 0x61 <= c && c <= 0x7A } -> True

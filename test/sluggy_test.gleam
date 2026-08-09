@@ -25,9 +25,41 @@ pub fn str_slugify_str_3_test() {
   let str =
     "Develop skills in Gleam and 70+ other languages with a unique blend of learning, practicing, and mentoring from skilled programmers. An educational non-profit and free forever."
   let exp =
-    "develop-skills-in-gleam-and-70-other-languages-with-a-unique-blend-of-learning-practicing-and-mentoring-from-skilled-programmers-an-educational-non-profit-and-free-forever"
+    "develop-skills-in-gleam-and-70-plus-other-languages-with-a-unique-blend-of-learning-practicing-and-mentoring-from-skilled-programmers-an-educational-non-profit-and-free-forever"
   let slugified_str = sluggy.str_slugify(str)
 
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_str_transliteration_1_test() {
+  let str = "Hello world, this is Jack & Jones article !"
+  let exp = "hello-world-this-is-jack-and-jones-article"
+
+  let slugified_str = sluggy.str_slugify(str)
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_str_transliteration_2_test() {
+  let str = "We got 99.999% availability this year."
+  let exp = "we-got-99-999-percent-availability-this-year"
+
+  let slugified_str = sluggy.str_slugify(str)
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_str_transliteration_3_test() {
+  let str = "Find us at GitHub @crowlabs-hq"
+  let exp = "find-us-at-github-at-crowlabs-hq"
+
+  let slugified_str = sluggy.str_slugify(str)
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_str_transliteration_4_test() {
+  let str = "NY Times: the software mistakes that costed 100M$"
+  let exp = "ny-times-the-software-mistakes-that-costed-100m-dollar"
+
+  let slugified_str = sluggy.str_slugify(str)
   assert slugified_str == exp
 }
 // TODO

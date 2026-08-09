@@ -1,3 +1,16 @@
+import gleam/option.{type Option, None, Some}
+
+pub fn symbol_replacement(code: Int) -> Option(String) {
+  case code {
+    0x26 -> Some("and")
+    0x24 -> Some("dollar")
+    0x25 -> Some("percent")
+    0x40 -> Some("at")
+    0x2B -> Some("plus")
+    _ -> None
+  }
+}
+
 /// Checks if the code corresponds to a Combining Diacritical Mark
 /// (range U+0300 to U+036F)
 pub fn is_combining_mark(code: Int) -> Bool {

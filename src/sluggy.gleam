@@ -1,7 +1,11 @@
 import gleam/int
 import gleam/list
+import gleam/option.{None, Some}
 import gleam/string
 import sluggy/internal/utils
+
+// TODO
+// length limit (without truncating mid-word)
 
 @external(erlang, "unicode", "characters_to_nfkd_binary")
 @external(javascript, "./slug_ffi.mjs", "js_normalize")
@@ -146,38 +150,59 @@ fn slugify_fold(
     False -> {
       let lowercased = utils.to_lower_ascii(codepoint)
 
-      case utils.is_slug_char(lowercased) {
-        True -> {
-          let assert Ok(char_cp) = string.utf_codepoint(lowercased)
-          let is_new_word = !acc.has_output || acc.pending_sep
-          let prefix = case acc.has_output && acc.pending_sep {
-            True -> [char_cp, hyphen_cp]
-            False -> [char_cp]
+      case utils.symbol_replacement(codepoint) {
+        Some(word) ->
+          emit_word(
+            acc,
+            list.reverse(string.to_utf_codepoints(word)),
+            hyphen_cp,
+            True,
+          )
+
+        None ->
+          case utils.is_slug_char(lowercased) {
+            True -> {
+              let assert Ok(char_cp) = string.utf_codepoint(lowercased)
+              emit_word(acc, [char_cp], hyphen_cp, False)
+            }
+            // Not a slug char, separator is now pending, nothing emitted
+            False ->
+              SlugAcc(
+                acc.codepoints,
+                True,
+                acc.has_output,
+                acc.word_count,
+                acc.length_count,
+              )
           }
-          SlugAcc(
-            list.append(prefix, acc.codepoints),
-            False,
-            True,
-            acc.word_count + utils.bool_to_int(is_new_word),
-            acc.length_count + list.length(prefix),
-          )
-        }
-        // Not a slug char, separator is now pending, nothing emitted
-        False ->
-          SlugAcc(
-            acc.codepoints,
-            True,
-            acc.has_output,
-            acc.word_count,
-            acc.length_count,
-          )
       }
     }
   }
 }
-// TODO
 
-// transliteration (for a small-set of symbolss only)
-// & -> and, % -> percent, @ -> at ...
+/// Adds a word's codepoints to the accumulator as a single slug
+/// word, and also the separator (hyphen) when needed.
+fn emit_word(
+  acc: SlugAcc,
+  word_codepoints: List(UtfCodepoint),
+  hyphen_cp: UtfCodepoint,
+  force_boundary: Bool,
+) -> SlugAcc {
+  let needs_leading_sep =
+    acc.has_output && { acc.pending_sep || force_boundary }
 
-// length limit (without truncating mid-word)
+  let is_new_word = !acc.has_output || acc.pending_sep || force_boundary
+
+  let prefix = case needs_leading_sep {
+    True -> list.append(word_codepoints, [hyphen_cp])
+    False -> word_codepoints
+  }
+
+  SlugAcc(
+    list.append(prefix, acc.codepoints),
+    force_boundary,
+    True,
+    acc.word_count + utils.bool_to_int(is_new_word),
+    acc.length_count + list.length(prefix),
+  )
+}

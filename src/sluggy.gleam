@@ -53,6 +53,8 @@ pub fn to_string(slug: Slug) -> String {
   s
 }
 
+// TODO "combine(s1: Slug, s2: Slug) -> Slug" method
+
 /// Returns a human-readable, debug-style representation of a `Slug`,
 /// showing its word count, length, and slug string.
 ///
@@ -65,7 +67,7 @@ pub fn inspect(slug: Slug) -> String {
   "Slug(words: "
   <> int.to_string(slug.words)
   <> ", "
-  <> "lenght: "
+  <> "length: "
   <> int.to_string(slug.length)
   <> ", "
   <> "str: "

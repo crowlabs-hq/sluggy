@@ -57,9 +57,10 @@ pub fn to_string(slug: Slug) -> String {
 ///
 /// ### Examples
 /// ```gleam
-/// let slug_1 = from_string("Hello")
-/// let slug_2 = from_string("Sluggy !")
+/// let slug_1 = sluggy.from_string("Hello")
+/// let slug_2 = sluggy.from_string("Sluggy !")
 /// let combined = sluggy.combine(slug_1, slug_2)
+///
 /// assert sluggy.inspect(combined) == "Slug(words: 2, length: 12, str: hello-sluggy)"
 /// ```
 pub fn combine(s1: Slug, s2: Slug) -> Slug {
@@ -80,7 +81,8 @@ pub fn combine(s1: Slug, s2: Slug) -> Slug {
 ///
 /// ### Example
 /// ```gleam
-/// let slug = from_string("New article is out.")
+/// let slug = sluggy.from_string("New article is out.")
+///
 /// assert sluggy.inspect(slug) == "Slug(words: 4, length: 18, str: new-article-is-out)"
 /// ```
 pub fn inspect(slug: Slug) -> String {

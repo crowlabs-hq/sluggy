@@ -31,6 +31,22 @@ pub fn str_slugify_str_3_test() {
   assert slugified_str == exp
 }
 
+pub fn str_slugify_str_apostrophe_test() {
+  let str = "What's the next feature in Gleam ?"
+  let exp = "whats-the-next-feature-in-gleam"
+  let slugified_str = sluggy.str_slugify(str)
+
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_str_right_apostrophe_test() {
+  let str = "Is that Jane Birkin’s song?"
+  let exp = "is-that-jane-birkins-song"
+  let slugified_str = sluggy.str_slugify(str)
+
+  assert slugified_str == exp
+}
+
 pub fn str_slugify_str_transliteration_1_test() {
   let str = "Hello world, this is Jack & Jones article !"
   let exp = "hello-world-this-is-jack-and-jones-article"

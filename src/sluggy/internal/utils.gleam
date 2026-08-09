@@ -17,6 +17,19 @@ pub fn is_combining_mark(code: Int) -> Bool {
   { 0x0300 <= code && code <= 0x036F }
 }
 
+/// Returns whether the code should be dropped silently, without
+/// creating a word boundary. Apostrophes are the main case: `"don't"`
+/// should become `"dont"`, not `"don-t"`.
+pub fn to_be_dropped(code: Int) -> Bool {
+  case code {
+    // ' (regular apostrophe)
+    0x27 -> True
+    // ’ (right single quotation mark)
+    0x2019 -> True
+    _ -> False
+  }
+}
+
 /// If the given codepoint corresponds to an uppercase ASCII letter (`A`-`Z`),
 /// it returns the lowercase ASCII codepoint of the equivalent letter.
 pub fn to_lower_ascii(code: Int) -> Int {

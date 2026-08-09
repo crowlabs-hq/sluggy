@@ -145,7 +145,9 @@ fn slugify_fold(
 ) -> SlugAcc {
   let codepoint = string.utf_codepoint_to_int(cp)
 
-  case utils.is_combining_mark(codepoint) {
+  case
+    { utils.is_combining_mark(codepoint) || utils.to_be_dropped(codepoint) }
+  {
     True -> acc
     False -> {
       let lowercased = utils.to_lower_ascii(codepoint)

@@ -1,5 +1,4 @@
 import gleam/int
-import gleam/io
 import gleam/list
 import gleam/string
 import sluggy/internal/utils
@@ -27,11 +26,11 @@ type SlugAcc {
   )
 }
 
-/// Converts a string to its slug representation
-/// instead of a whole `Slug`.
+/// Converts a string to its slug representation, returning a plain
+/// `String` instead of a whole `Slug`.
 ///
-/// This is more convenient when we don't need other information
-/// such as the number of words or its precomputed length.
+/// This is more convenient when you don't need the word count or
+/// precomputed length; use `from_string` instead if you do.
 ///
 /// ### Example
 /// ```gleam
@@ -53,7 +52,28 @@ pub fn to_string(slug: Slug) -> String {
   s
 }
 
-// TODO "combine(s1: Slug, s2: Slug) -> Slug" method
+/// Combines two `Slug`'s into a single one, summing their word counts
+/// and lengths (plus one, for the hyphen joining them).
+///
+/// ### Examples
+/// ```gleam
+/// let slug_1 = from_string("Hello")
+/// let slug_2 = from_string("Sluggy !")
+/// let combined = sluggy.combine(slug_1, slug_2)
+/// assert sluggy.inspect(combined) == "Slug(words: 2, length: 12, str: hello-sluggy)"
+/// ```
+pub fn combine(s1: Slug, s2: Slug) -> Slug {
+  case s1.str, s2.str {
+    _, "" -> s1
+    "", _ -> s2
+    _, _ ->
+      Slug(
+        words: s1.words + s2.words,
+        length: s1.length + s2.length + 1,
+        str: s1.str <> "-" <> s2.str,
+      )
+  }
+}
 
 /// Returns a human-readable, debug-style representation of a `Slug`,
 /// showing its word count, length, and slug string.
@@ -80,10 +100,13 @@ pub fn inspect(slug: Slug) -> String {
 
 /// Creates a new `Slug` from the provided string.
 ///
+/// If you only need the slugified string and don't want the **words**
+/// and **length** fields, use `str_slugify` instead.
+///
 /// ### Example
 /// ```gleam
 /// let slug = sluggy.from_string("New article is out.")
-/// assert sluggy.to_string(slug) == "new-article-is-out"
+/// assert sluggy.inspect(slug) == "Slug(words: 4, length: 18, str: new-article-is-out)"
 /// ```
 pub fn from_string(str: String) -> Slug {
   let acc = compute(str)
@@ -150,33 +173,9 @@ fn slugify_fold(
     }
   }
 }
-
 // TODO
 
 // transliteration (for a small-set of symbolss only)
 // & -> and, % -> percent, @ -> at ...
 
 // length limit (without truncating mid-word)
-
-pub fn main() -> Nil {
-  // io.println("Hello from sluggy!")
-  // let str = "Sluggy is awesome !"
-  // let slugified = str_slugify(str)
-
-  // let str = "Hello World ; )"
-  // let slugified = from_string(str)
-  // let slug_str = to_string(slugified)
-
-  // let slugified = from_string("Hello World ; )")
-  // assert "hello-world" == to_string(slugified)
-  // assert "" = sluggy.to_string(slugified)
-  // assert "sluggy-is-awesome" == str_slugify("Sluggy is awesome !")
-
-  assert Slug(words: 4, length: 18, str: "new-article-is-out")
-    == from_string("New article is out.")
-
-  let slug = from_string("New article is out.")
-  io.println(inspect(slug))
-  // io.println("[before]: " <> str)
-  // io.println("[after]: " <> slug_str)
-}

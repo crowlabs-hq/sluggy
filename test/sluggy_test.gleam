@@ -78,6 +78,22 @@ pub fn str_slugify_symbol_dollar_test() {
   let slugified_str = sluggy.str_slugify(str)
   assert slugified_str == exp
 }
+
+pub fn str_slugify_symbol_euro_test() {
+  let str = "That will be 100.000 €, sir"
+  let exp = "that-will-be-100-000-euro-sir"
+
+  let slugified_str = sluggy.str_slugify(str)
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_symbol_degrees_test() {
+  let str = "It's so hot, 42° out here ; ("
+  let exp = "its-so-hot-42-degrees-out-here"
+
+  let slugified_str = sluggy.str_slugify(str)
+  assert slugified_str == exp
+}
 // TODO
 
 // idempotency checks

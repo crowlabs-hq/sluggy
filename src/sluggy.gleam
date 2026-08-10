@@ -80,6 +80,8 @@ pub fn to_string(slug: Slug) -> String {
 /// Combines two `Slug`'s into a single one, summing their word counts
 /// and lengths (plus one, for the hyphen joining them).
 ///
+/// Note: This function **does not** enforce a **max. length** cap on the result.
+///
 /// ### Examples
 /// ```gleam
 /// let slug_1 = sluggy.from_string("Hello")

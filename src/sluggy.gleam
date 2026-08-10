@@ -66,16 +66,15 @@ pub fn str_slugify_max_length(str: String, max_length: Int) -> String {
   truncate(computed, max_length).str
 }
 
-/// Given a `Slug`, this gives only its slug string.
+/// Given a `Slug` record, this gives only its string field.
 ///
 /// ### Example
 /// ```gleam
-/// let slug = from_string("Hello World ; )")
+/// let slug = sluggy.from_string("Hello World ; )")
 /// assert "hello-world" == sluggy.to_string(slug)
 /// ```
 pub fn to_string(slug: Slug) -> String {
-  let Slug(_l, _w, s) = slug
-  s
+  slug.str
 }
 
 /// Combines two `Slug`'s into a single one, summing their word counts

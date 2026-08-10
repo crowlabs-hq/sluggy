@@ -26,8 +26,7 @@ pub fn str_slugify_2_test() {
 pub fn str_slugify_3_test() {
   let str =
     "Develop skills in Gleam and 70+ other languages with a unique blend of learning, practicing, and mentoring from skilled programmers. An educational non-profit and free forever."
-  let exp =
-    "develop-skills-in-gleam-and-70-plus-other-languages-with-a-unique-blend-of-learning-practicing-and-mentoring-from-skilled-programmers-an-educational-non-profit-and-free-forever"
+  let exp = "develop-skills-in-gleam-and-70-plus-other-languages-with-a"
   let slugified_str = sluggy.str_slugify(str)
 
   assert slugified_str == exp
@@ -158,6 +157,74 @@ pub fn str_slugify_leading_digits_test() {
   let exp = "0042-rue-de-la-paix"
 
   assert sluggy.str_slugify(str) == exp
+}
+
+// str_slugify_max_length
+
+pub fn str_slugify_max_test() {
+  let str =
+    "Develop skills in Gleam and 70+ other languages with a unique blend of learning, practicing, and mentoring from skilled programmers. An educational non-profit and free forever."
+  let exp =
+    "develop-skills-in-gleam-and-70-plus-other-languages-with-a-unique-blend-of-learning-practicing-and-mentoring-from-skilled-programmers-an-educational-non-profit-and-free-forever"
+
+  let slugified_str = sluggy.str_slugify_max_length(str, 180)
+
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_max_2_test() {
+  let str =
+    "Develop skills in Gleam and 70+ other languages with a unique blend of learning, practicing, and mentoring from skilled programmers. An educational non-profit and free forever."
+  let exp = "develop-skills-in-gleam-and-70"
+
+  let slugified_str = sluggy.str_slugify_max_length(str, 34)
+
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_max_3_test() {
+  let str = "héllo世界wörld"
+  let exp = "hello"
+
+  let slugified_str = sluggy.str_slugify_max_length(str, 11)
+
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_max_4_test() {
+  let str = "héllo世界wörld"
+  let exp = "hello-world"
+
+  let slugified_str = sluggy.str_slugify_max_length(str, 12)
+
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_max_5_test() {
+  let str = "héllo世界wörld"
+  let exp = ""
+
+  let slugified_str = sluggy.str_slugify_max_length(str, 1)
+
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_max_6_test() {
+  let str = "&hey/you !"
+  let exp = "and"
+
+  let slugified_str = sluggy.str_slugify_max_length(str, 3)
+
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_max_7_test() {
+  let str = "&hey/you !"
+  let exp = ""
+
+  let slugified_str = sluggy.str_slugify_max_length(str, 2)
+
+  assert slugified_str == exp
 }
 
 // from_string (and indirectly, inspect)

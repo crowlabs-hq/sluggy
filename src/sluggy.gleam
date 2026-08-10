@@ -1,11 +1,8 @@
 import gleam/int
-import gleam/list
+import gleam/list.{Continue, Stop}
 import gleam/option.{None, Some}
 import gleam/string
 import sluggy/internal/utils
-
-// TODO
-// length limit (without truncating mid-word)
 
 @external(erlang, "unicode", "characters_to_nfkd_binary")
 @external(javascript, "./slug_ffi.mjs", "js_normalize")
@@ -36,12 +33,25 @@ type SlugAcc {
 /// This is more convenient when you don't need the word count or
 /// precomputed length; use [from_string](#from_string) instead if you do.
 ///
+/// Since this is SEO-oriented, the default length cap of the
+/// slug is **60** characters. If you want a custom length, use
+/// [str_slugify_max_length](#str_slugify_max_length) instead.
+///
 /// ### Example
 /// ```gleam
 /// assert sluggy.str_slugify("Sluggy is awesome !") == "sluggy-is-awesome"
 /// ```
 pub fn str_slugify(str: String) -> String {
-  str |> compute |> fn(acc) { codepoints_to_string(acc.codepoints) }
+  str_slugify_max_length(str, 60)
+}
+
+/// Same as [str_slugify](#str_slugify), but with a custom max. length instead
+/// of the default of 60.
+///
+/// Note that this doesn't mean the resulting slug will be exactly
+/// `max_length` characters long; only that it won't exceed it.
+pub fn str_slugify_max_length(str: String, max_length: Int) -> String {
+  compute(str, max_length) |> fn(acc) { codepoints_to_string(acc.codepoints) }
 }
 
 /// Given a `Slug`, this gives only its slug string.
@@ -115,7 +125,7 @@ pub fn inspect(slug: Slug) -> String {
 /// assert sluggy.inspect(slug) == "Slug(words: 4, length: 18, str: new-article-is-out)"
 /// ```
 pub fn from_string(str: String) -> Slug {
-  let acc = compute(str)
+  let acc = compute(str, 60)
   Slug(
     words: acc.word_count,
     length: acc.length_count,
@@ -127,15 +137,37 @@ fn codepoints_to_string(codepoints: List(UtfCodepoint)) -> String {
   codepoints |> list.reverse |> string.from_utf_codepoints
 }
 
-fn compute(str: String) -> SlugAcc {
+fn compute(str: String, max_length: Int) -> SlugAcc {
   let assert [hyphen_cp] = string.to_utf_codepoints("-")
 
   str
   |> normalize_nfkd
   |> string.to_utf_codepoints
-  |> list.fold(SlugAcc([], False, False, 0, 0), fn(acc, cp) {
-    slugify_fold(acc, cp, hyphen_cp)
+  |> list.fold_until(SlugAcc([], False, False, 0, 0), fn(acc, cp) {
+    case acc.length_count >= max_length {
+      False -> Continue(slugify_fold(acc, cp, hyphen_cp))
+      True -> Stop(acc)
+    }
   })
+  |> truncate(hyphen_cp, max_length)
+}
+
+fn truncate(acc: SlugAcc, hyphen_cp: UtfCodepoint, max_length: Int) -> SlugAcc {
+  let overshot = acc.length_count > max_length
+  let exact_but_mid_word = acc.length_count == max_length && !acc.pending_sep
+
+  case overshot || exact_but_mid_word {
+    True -> {
+      let kept = case
+        list.drop_while(acc.codepoints, fn(c) { c != hyphen_cp })
+      {
+        [_hyphen, ..rest] -> rest
+        [] -> []
+      }
+      SlugAcc(..acc, codepoints: kept)
+    }
+    False -> acc
+  }
 }
 
 fn slugify_fold(

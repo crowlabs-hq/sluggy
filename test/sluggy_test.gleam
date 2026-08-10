@@ -183,46 +183,88 @@ pub fn str_slugify_max_2_test() {
 }
 
 pub fn str_slugify_max_3_test() {
-  let str = "héllo世界wörld"
+  let str = "hello world"
+  let max = 5
   let exp = "hello"
 
-  let slugified_str = sluggy.str_slugify_max_length(str, 11)
+  let slugified_str = sluggy.str_slugify_max_length(str, max)
 
   assert slugified_str == exp
 }
 
 pub fn str_slugify_max_4_test() {
-  let str = "héllo世界wörld"
-  let exp = "hello-world"
+  let str = "hello world"
+  let max = 9
+  let exp = "hello"
 
-  let slugified_str = sluggy.str_slugify_max_length(str, 12)
+  let slugified_str = sluggy.str_slugify_max_length(str, max)
 
   assert slugified_str == exp
 }
 
 pub fn str_slugify_max_5_test() {
-  let str = "héllo世界wörld"
-  let exp = ""
+  let str = "hello world"
+  let max = 10
+  let exp = "hello"
 
-  let slugified_str = sluggy.str_slugify_max_length(str, 1)
+  let slugified_str = sluggy.str_slugify_max_length(str, max)
 
   assert slugified_str == exp
 }
 
 pub fn str_slugify_max_6_test() {
-  let str = "&hey/you !"
-  let exp = "and"
+  let str = "hello world"
+  let max = 11
+  let exp = "hello-world"
 
-  let slugified_str = sluggy.str_slugify_max_length(str, 3)
+  let slugified_str = sluggy.str_slugify_max_length(str, max)
 
   assert slugified_str == exp
 }
 
 pub fn str_slugify_max_7_test() {
+  let str = "héllo世界wörld"
+  let exp = "hello"
+
+  let slugified_str = sluggy.str_slugify_max_length(str, 10)
+
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_max_8_test() {
+  let str = "héllo世界wörld"
+  let max = 12
+  let exp = "hello-world"
+  let slugified_str = sluggy.str_slugify_max_length(str, max)
+
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_max_9_test() {
+  let str = "héllo世界wörld"
+  let max = 1
+  let exp = ""
+  let slugified_str = sluggy.str_slugify_max_length(str, max)
+
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_max_10_test() {
   let str = "&hey/you !"
+  let max = 2
   let exp = ""
 
-  let slugified_str = sluggy.str_slugify_max_length(str, 2)
+  let slugified_str = sluggy.str_slugify_max_length(str, max)
+
+  assert slugified_str == exp
+}
+
+pub fn str_slugify_max_11_test() {
+  let str = "&hey/you !"
+  let max = 3
+  let exp = "and"
+
+  let slugified_str = sluggy.str_slugify_max_length(str, max)
 
   assert slugified_str == exp
 }

@@ -170,11 +170,11 @@ fn slugify_fold(
             // Not a slug char, separator is now pending, nothing emitted
             False ->
               SlugAcc(
-                acc.codepoints,
-                True,
-                acc.has_output,
-                acc.word_count,
-                acc.length_count,
+                codepoints: acc.codepoints,
+                pending_sep: True,
+                has_output: acc.has_output,
+                word_count: acc.word_count,
+                length_count: acc.length_count,
               )
           }
       }
@@ -201,10 +201,10 @@ fn emit_word(
   }
 
   SlugAcc(
-    list.append(prefix, acc.codepoints),
-    force_boundary,
-    True,
-    acc.word_count + utils.bool_to_int(is_new_word),
-    acc.length_count + list.length(prefix),
+    codepoints: list.append(prefix, acc.codepoints),
+    pending_sep: force_boundary,
+    has_output: True,
+    word_count: acc.word_count + utils.bool_to_int(is_new_word),
+    length_count: acc.length_count + list.length(prefix),
   )
 }

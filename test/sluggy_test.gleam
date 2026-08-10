@@ -164,10 +164,11 @@ pub fn str_slugify_leading_digits_test() {
 pub fn str_slugify_max_test() {
   let str =
     "Develop skills in Gleam and 70+ other languages with a unique blend of learning, practicing, and mentoring from skilled programmers. An educational non-profit and free forever."
+  let max = 180
   let exp =
     "develop-skills-in-gleam-and-70-plus-other-languages-with-a-unique-blend-of-learning-practicing-and-mentoring-from-skilled-programmers-an-educational-non-profit-and-free-forever"
 
-  let slugified_str = sluggy.str_slugify_max_length(str, 180)
+  let slugified_str = sluggy.str_slugify_max_length(str, max)
 
   assert slugified_str == exp
 }
@@ -175,9 +176,10 @@ pub fn str_slugify_max_test() {
 pub fn str_slugify_max_2_test() {
   let str =
     "Develop skills in Gleam and 70+ other languages with a unique blend of learning, practicing, and mentoring from skilled programmers. An educational non-profit and free forever."
+  let max = 34
   let exp = "develop-skills-in-gleam-and-70"
 
-  let slugified_str = sluggy.str_slugify_max_length(str, 34)
+  let slugified_str = sluggy.str_slugify_max_length(str, max)
 
   assert slugified_str == exp
 }
@@ -224,9 +226,10 @@ pub fn str_slugify_max_6_test() {
 
 pub fn str_slugify_max_7_test() {
   let str = "héllo世界wörld"
+  let max = 10
   let exp = "hello"
 
-  let slugified_str = sluggy.str_slugify_max_length(str, 10)
+  let slugified_str = sluggy.str_slugify_max_length(str, max)
 
   assert slugified_str == exp
 }

@@ -10,7 +10,7 @@ fn normalize_nfkd(str: String) -> String
 
 /// A slug, along with its word count and length, computed alongside it.
 ///
-/// Values of this type can only be constructed with `from_string`, which
+/// Values of this type can only be constructed with [from_string](#from_string), which
 /// guarantees `words`, `length`, and `str` always stay consistent with
 /// each other.
 pub opaque type Slug {
